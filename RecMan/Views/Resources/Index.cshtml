@@ -1,0 +1,82 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+@model IEnumerable<RecMan.Models.Resource>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+
+@using (Html.BeginForm())
+{
+    <p>
+        Search: @Html.TextBox("SearchString")
+        <input type="submit" value="Search" />
+        
+        <button onclick="location.href='@Url.Action("Index")';return false;">Cancel</button>
+
+    </p>
+}
+<table class="table">
+    <tr>
+        <th>
+            @Html.ActionLink("Level", "Index", new { sortOrder = ViewBag.LevelSortParm })
+        </th>
+        <th>
+            @Html.ActionLink("Focus", "Index", new { sortOrder = ViewBag.FocusSortParm })
+        </th>
+        <th>
+            @Html.ActionLink("Title", "Index", new { sortOrder = ViewBag.TitleSortParm })
+        </th>
+        <th>
+            @Html.ActionLink("Source", "Index", new { sortOrder = ViewBag.SourceSortParm })
+        </th>
+        <th>
+            @Html.ActionLink("Topic", "Index", new { sortOrder = ViewBag.TopicSortParm })
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Level)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Focus)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Source)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Topic)
+            </td>
+
+            <td>
+
+                @if (User.IsInRole("Manager, Admin"))
+                {
+                    @Html.ActionLink("Edit", "Edit", new { id = item.ResourceID })
+                }
+                @Html.ActionLink("Details", "Details", new { id = item.ResourceID })
+
+                @if (User.IsInRole("Manager, Admin"))
+                {
+                    @Html.ActionLink("Delete", "Delete", new { id = item.ResourceID })
+                }
+            </td>
+        </tr>
+    }
+
+</table>

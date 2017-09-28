@@ -1,0 +1,93 @@
+﻿@model RecMan.Models.Resource
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Resource</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Source)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Source)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Level)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Level)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Focus)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Focus)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Topic)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Topic)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Content)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Content)
+        </dd>
+
+
+
+
+@if (Model.Files.Any(f => f.ContentType == "image/jpeg"))
+{
+    <dt>
+        Avatar
+    </dt>
+    <dd>
+        <img src="~/File?id=@Model.Files.First(f => f.FileType == FileType.Avatar).FileId" alt="avatar" />
+    </dd>
+
+}
+
+@if (Model.Files.Any(f => f.ContentType == "application/pdf"))
+{
+    var getData = ViewData["PDF"];
+
+    <object data="data:application/pdf;base64,@System.Convert.ToBase64String((Byte[])ViewData["PDF"])" type="application/pdf" width="500">
+        <embed src="data:application/pdf;base64, @System.Convert.ToBase64String((Byte[])ViewData["PDF"])" type="application/pdf" />
+    </object>
+}
+
+
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.ResourceID }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }
+
