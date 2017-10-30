@@ -11,19 +11,9 @@
 <h2>Index</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("+", "Create")
 </p>
 
-@using (Html.BeginForm())
-{
-    <p>
-        Search: @Html.TextBox("SearchString")
-        <input type="submit" value="Search" />
-        
-        <button onclick="location.href='@Url.Action("Index")';return false;">Cancel</button>
-
-    </p>
-}
 <table class="table">
     <tr>
         <th>
