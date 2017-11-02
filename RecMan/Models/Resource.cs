@@ -55,10 +55,13 @@ namespace RecMan.Models
         public LanguageFocus Focus { get; set; }
         public String Topic { get; set; }
         public String Content { get; set; }
+        public int VoteCount { get; set; }
 
         public virtual ICollection<File> Files { get; set; }
         public virtual ICollection<FilePath> FilePaths { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
+        public virtual ICollection<Vote> Votes { get; set; }
+
 
     }
 }

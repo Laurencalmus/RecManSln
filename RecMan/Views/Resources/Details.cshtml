@@ -58,6 +58,37 @@
             @Html.DisplayFor(model => model.Content)
         </dd>
 
+        <input type="submit" value="ThumbsUp" class="btn btn-default" id="btnSubmit" /> 
+
+        <script type="text/javascript">
+
+    $(document).ready(function() {
+        $(function() {
+
+            /*var myBtn = document.getElementById('btnSubmit');
+            myBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('Hello');
+            });*/
+
+            $('#btnSubmit').click(function(event) {
+                event.preventDefault(); //This prevents the default action
+                alert("Hello"); //Show the alert
+            });
+        });
+    });
+        </script> 
+        </script>  
+
+        <dt>
+            @Html.DisplayNameFor(model => model.VoteCount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.VoteCount)
+        </dd>
+        
+
 
 
 

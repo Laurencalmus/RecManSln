@@ -10,6 +10,7 @@ using RecMan.DAL;
 using RecMan.Models;
 using System.IO;
 using System.Data.Entity.Infrastructure;
+using Microsoft.AspNet.Identity;
 
 namespace RecMan.Controllers
 {
@@ -92,8 +93,50 @@ namespace RecMan.Controllers
                 return HttpNotFound();
             }
 
+            var newVote = new Vote();
             return View(resource);
         }
+
+        // POST: Resources/Details             //for vote counter
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost, ActionName("Details")]
+        [ValidateAntiForgeryToken]
+        public ActionResult Vote([Bind(Include = "ResourceID,Title,Source,Level,Focus,Topic,Content,File,FilePath,ContentType")] int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var resource = db.Resources.Find(id);
+
+            var newVote = new Models.Vote               //create new vote [[[[[from 'link click' with user id]]]]]]
+            {
+                UserId = User.Identity.GetUserId(),
+                ResourceId = resource.ResourceID,
+                //public virtual Resource Resource { get; set; }
+            };
+
+            //--------------------------------------------------------------------------------------
+
+            var votes = from Votes in db.Votes                //set voteCount
+                            select Votes;
+            votes = votes.Where(model => model.ResourceId == id);
+
+            int numberVotes = votes.Count();  //int numberVotes = # of votes (from above)
+
+            //--------------------------------------------------------------------------------------
+
+                    resource.Votes = new List<Models.Vote> { newVote };
+                    resource.VoteCount = numberVotes;
+                    db.Entry(resource).State = EntityState.Modified;
+                    db.SaveChanges();
+
+            return View(resource);
+
+        }
+        
 
         // GET: Resources/Create
         public ActionResult Create()
