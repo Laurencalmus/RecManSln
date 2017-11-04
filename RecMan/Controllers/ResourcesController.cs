@@ -93,7 +93,6 @@ namespace RecMan.Controllers
                 return HttpNotFound();
             }
 
-            var newVote = new Vote();
             return View(resource);
         }
 
@@ -102,38 +101,48 @@ namespace RecMan.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost, ActionName("Details")]
         [ValidateAntiForgeryToken]
-        public ActionResult Vote([Bind(Include = "ResourceID,Title,Source,Level,Focus,Topic,Content,File,FilePath,ContentType")] int? id)
+        public ActionResult Vote([Bind(Include = "ResourceID,Title,Source,Level,Focus,Topic,Content,File,FilePath,ContentType")] int? id, Vote vote)
         {
+            var resource = db.Resources.Find(id);
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var resource = db.Resources.Find(id);
 
-            var newVote = new Models.Vote               //create new vote [[[[[from 'link click' with user id]]]]]]
+            if (ModelState.IsValid && User.Identity.IsAuthenticated == true)
             {
-                UserId = User.Identity.GetUserId(),
-                ResourceId = resource.ResourceID,
+                vote.UserId = User.Identity.GetUserId();
+                vote.ResourceId = resource.ResourceID;
                 //public virtual Resource Resource { get; set; }
             };
 
-            //--------------------------------------------------------------------------------------
+            var userlike = db.Votes.Where(l => l.UserId == vote.UserId && l.ResourceId == id);
+            List<Vote> resourceVotes = db.Votes.Where(r => r.ResourceId == id).ToList();    //set voteCount
+            int numberVotes = resourceVotes.Count();  //int numberVotes = # of votes (from above)
 
-            var votes = from Votes in db.Votes                //set voteCount
-                            select Votes;
-            votes = votes.Where(model => model.ResourceId == id);
+            Resource thisResource = db.Resources.Include(r => r.Files).SingleOrDefault(r => r.ResourceID == id);
+            var PdfFile = db.Files.Where(p => p.ResourceId == id).Select(f => f.Content).FirstOrDefault();
 
-            int numberVotes = votes.Count();  //int numberVotes = # of votes (from above)
+            //thisResource.VoteCount = numberVotes;   //set vote count of this resource to reflect new vote  ???
 
-            //--------------------------------------------------------------------------------------
-
-                    resource.Votes = new List<Models.Vote> { newVote };
-                    resource.VoteCount = numberVotes;
-                    db.Entry(resource).State = EntityState.Modified;
-                    db.SaveChanges();
-
-            return View(resource);
+            if (userlike.Count() == 0)
+            {
+                db.Votes.Add(vote);
+                db.SaveChanges();
+            }
+            else if (userlike.Count() == 1)
+            {
+                var voteDel = db.Votes.FirstOrDefault(l => l.UserId == vote.UserId && l.ResourceId == id);
+                db.Votes.Remove(voteDel);
+                db.SaveChanges();
+            }
+            //db.Entry(resource).State = EntityState.Modified;
+            //db.SaveChanges(); 
+            
+        
+                return View(resource);
 
         }
         

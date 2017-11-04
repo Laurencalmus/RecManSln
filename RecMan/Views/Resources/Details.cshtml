@@ -58,27 +58,24 @@
             @Html.DisplayFor(model => model.Content)
         </dd>
 
-        <input type="submit" value="ThumbsUp" class="btn btn-default" id="btnSubmit" /> 
+        <div id="thumbsUp">
+            <button type="button" onclick="loadDoc()">thumbsUp</button>
+        </div>
 
-        <script type="text/javascript">
-
-    $(document).ready(function() {
-        $(function() {
-
-            /*var myBtn = document.getElementById('btnSubmit');
-            myBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                alert('Hello');
-            });*/
-
-            $('#btnSubmit').click(function(event) {
-                event.preventDefault(); //This prevents the default action
-                alert("Hello"); //Show the alert
-            });
-        });
-    });
-        </script> 
-        </script>  
+        <script>
+        function loadDoc() {
+          var xhttp = new XMLHttpRequest();
+          xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+              document.getElementById("demo").innerHTML =
+              this.responseText;
+            }
+          };
+          xhttp.open("GET", "ResourcesConroller.cs", true);
+          xhttp.send();
+        }
+        </script>
+  
 
         <dt>
             @Html.DisplayNameFor(model => model.VoteCount)

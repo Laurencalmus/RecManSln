@@ -7,7 +7,7 @@ namespace RecMan.Models
 {
     public class Vote
     {
-        public int VoteId { get; set; }
+        public Guid VoteId { get; set; }
         public string UserId { get; set; }
         public int ResourceId { get; set; }
         public virtual Resource Resource { get; set; }
