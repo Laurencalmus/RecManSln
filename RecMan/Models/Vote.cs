@@ -5,9 +5,9 @@ using System.Web;
 
 namespace RecMan.Models
 {
-    public class Vote
+    public class Like
     {
-        public Guid VoteId { get; set; }
+        public int LikeId { get; set; }
         public string UserId { get; set; }
         public int ResourceId { get; set; }
         public virtual Resource Resource { get; set; }

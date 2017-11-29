@@ -58,24 +58,8 @@
             @Html.DisplayFor(model => model.Content)
         </dd>
 
-        <div id="thumbsUp">
-            <button type="button" onclick="loadDoc()">thumbsUp</button>
-        </div>
 
-        <script>
-        function loadDoc() {
-          var xhttp = new XMLHttpRequest();
-          xhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-              document.getElementById("demo").innerHTML =
-              this.responseText;
-            }
-          };
-          xhttp.open("GET", "ResourcesConroller.cs", true);
-          xhttp.send();
-        }
-        </script>
-  
+        @Html.ActionLink("Thumbsup", "Details", null, new { id = "LikeThumbsUp" })
 
         <dt>
             @Html.DisplayNameFor(model => model.VoteCount)
@@ -84,7 +68,7 @@
         <dd>
             @Html.DisplayFor(model => model.VoteCount)
         </dd>
-        
+
 
 
 
@@ -109,11 +93,25 @@
     </object>
 }
 
+        <dt>
+            @Html.DisplayNameFor(model => model.Comments)
+        </dt>
 
-    <p>
+        @foreach (var item in Model.Comments)
+        {
+            <div>@item.UserName</div>
+            <div>@item.Message</div>
+            <div>@item.DateTime</div>
+            <div>@item.DateTimeEdit</div>
+            @Html.ActionLink("Edit", "../Comments/Edit", new { id = item.ID, ResId = Model.ResourceID });
+            @Html.ActionLink("Delete", "../Comments/Delete", new { id = item.ID, ResId = Model.ResourceID }) 
+        }
+
+
+        @Html.ActionLink("Post a Comment", "../Comments/Create", new { id = Model.ResourceID }) |
         @Html.ActionLink("Edit", "Edit", new { id = Model.ResourceID }) |
         @Html.ActionLink("Back to List", "Index")
-    </p>
+ 
 
     @section Scripts {
         @Scripts.Render("~/bundles/jqueryval")

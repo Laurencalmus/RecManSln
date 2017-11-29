@@ -9,9 +9,11 @@ namespace RecMan.Models
     {
         public int ID { get; set; }
         public String Message { get; set; }
-        public int UserId { get; set; }
+        public String UserId { get; set; }
         public String UserName { get; set; }
-        public int ResourceId { get; set; }
+        public DateTime? DateTime { get; set; }
+        public DateTime? DateTimeEdit { get; set; }
+        public int ResourceID { get; set; }
         public virtual Resource Resource { get; set; }
     }
 }

@@ -88,64 +88,65 @@ namespace RecMan.Controllers
 
             ViewData["PDF"] = PdfFile;
 
+            var comments = db.Comments.Where(c => c.ResourceID == id);
+
             if (resource == null)
             {
                 return HttpNotFound();
             }
 
             return View(resource);
+            //return RedirectToAction("Create", "Comments");
         }
 
-        // POST: Resources/Details             //for vote counter
+        // POST: Resources/Details             //for like counter
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost, ActionName("Details")]
         [ValidateAntiForgeryToken]
-        public ActionResult Vote([Bind(Include = "ResourceID,Title,Source,Level,Focus,Topic,Content,File,FilePath,ContentType")] int? id, Vote vote)
+        public JsonResult Details([Bind(Include = "ResourceID,Title,Source,Level,Focus,Topic,Content,File,FilePath,ContentType")] int? id, int UserId)
         {
             var resource = db.Resources.Find(id);
 
-            if (id == null)
+            //if (a)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+                Like like = new Like
+                {
+                    UserId = User.Identity.GetUserId(),
+                    ResourceId = resource.ResourceID
+                    //public virtual Resource Resource { get; set; }
+                };
+
+                var userlike = db.Likes.Where(l => l.UserId == like.UserId && l.ResourceId == id);
+                List<Like> resourceLikes = db.Likes.Where(r => r.ResourceId == id).ToList();    //set likeCount
+                int numberLikes = resourceLikes.Count();  //int numberLikes = # of likes (from above)
+
+                Resource thisResource = db.Resources.Include(r => r.Files).SingleOrDefault(r => r.ResourceID == id);
+                var PdfFile = db.Files.Where(p => p.ResourceId == id).Select(f => f.Content).FirstOrDefault();
+
+                //thisResource.LikeCount = numberLikes;   //set like count of this resource to reflect new like  ???
+
+                if (userlike.Count() == 0)
+                {
+                    db.Likes.Add(like);
+                    db.SaveChanges();
+                }
+                else if (userlike.Count() == 1)
+                {
+                    var likeDel = db.Likes.FirstOrDefault(l => l.UserId == like.UserId && l.ResourceId == id);
+                    db.Likes.Remove(likeDel);
+                    db.SaveChanges();
+                }
+                //db.Entry(resource).State = EntityState.Modified;
+                //db.SaveChanges(); 
+
+
+                return Json(resource);
+
             }
-
-
-            if (ModelState.IsValid && User.Identity.IsAuthenticated == true)
-            {
-                vote.UserId = User.Identity.GetUserId();
-                vote.ResourceId = resource.ResourceID;
-                //public virtual Resource Resource { get; set; }
-            };
-
-            var userlike = db.Votes.Where(l => l.UserId == vote.UserId && l.ResourceId == id);
-            List<Vote> resourceVotes = db.Votes.Where(r => r.ResourceId == id).ToList();    //set voteCount
-            int numberVotes = resourceVotes.Count();  //int numberVotes = # of votes (from above)
-
-            Resource thisResource = db.Resources.Include(r => r.Files).SingleOrDefault(r => r.ResourceID == id);
-            var PdfFile = db.Files.Where(p => p.ResourceId == id).Select(f => f.Content).FirstOrDefault();
-
-            //thisResource.VoteCount = numberVotes;   //set vote count of this resource to reflect new vote  ???
-
-            if (userlike.Count() == 0)
-            {
-                db.Votes.Add(vote);
-                db.SaveChanges();
-            }
-            else if (userlike.Count() == 1)
-            {
-                var voteDel = db.Votes.FirstOrDefault(l => l.UserId == vote.UserId && l.ResourceId == id);
-                db.Votes.Remove(voteDel);
-                db.SaveChanges();
-            }
-            //db.Entry(resource).State = EntityState.Modified;
-            //db.SaveChanges(); 
-            
-        
-                return View(resource);
-
         }
-        
+              
 
         // GET: Resources/Create
         public ActionResult Create()

@@ -6,7 +6,7 @@ using System.Web.Mvc;
 using RecMan.Models;
 using RecMan.DAL;
 
-namespace ResourceManagement.Controllers
+namespace RecMan.Controllers
 {
     public class FileController : Controller
     {
