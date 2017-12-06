@@ -104,32 +104,24 @@ namespace RecMan.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost, ActionName("Details")]
         [ValidateAntiForgeryToken]
-        public JsonResult Details([Bind(Include = "ResourceID,Title,Source,Level,Focus,Topic,Content,File,FilePath,ContentType")] int? id, int UserId)
+        public ActionResult Details([Bind(Include = "ResourceID,Title,Source,Level,Focus,Topic,Content,File,FilePath,ContentType")] int id, int UserId)
         {
             var resource = db.Resources.Find(id);
+            ViewBag.ThisResource = resource;
 
-            //if (a)
+            if (User.Identity.IsAuthenticated || Session["Username"] != null)
             {
-
-                Like like = new Like
-                {
-                    UserId = User.Identity.GetUserId(),
-                    ResourceId = resource.ResourceID
-                    //public virtual Resource Resource { get; set; }
-                };
+                Like like = new Like();
 
                 var userlike = db.Likes.Where(l => l.UserId == like.UserId && l.ResourceId == id);
-                List<Like> resourceLikes = db.Likes.Where(r => r.ResourceId == id).ToList();    //set likeCount
-                int numberLikes = resourceLikes.Count();  //int numberLikes = # of likes (from above)
 
-                Resource thisResource = db.Resources.Include(r => r.Files).SingleOrDefault(r => r.ResourceID == id);
-                var PdfFile = db.Files.Where(p => p.ResourceId == id).Select(f => f.Content).FirstOrDefault();
-
-                //thisResource.LikeCount = numberLikes;   //set like count of this resource to reflect new like  ???
+                like.ResourceId = id;
+                like.UserId = User.Identity.GetUserId();
 
                 if (userlike.Count() == 0)
                 {
                     db.Likes.Add(like);
+                    like.Liked = true;
                     db.SaveChanges();
                 }
                 else if (userlike.Count() == 1)
@@ -140,13 +132,35 @@ namespace RecMan.Controllers
                 }
                 //db.Entry(resource).State = EntityState.Modified;
                 //db.SaveChanges(); 
+            }
+            List<Like> resourceLikes = db.Likes.Where(r => r.ResourceId == id).ToList();    //set likeCount  //all the likes for that resource(id)
+            int numberLikes = resourceLikes.Count();  //int numberLikes = # of likes (from above)
 
+            Resource thisResource = db.Resources.Include(r => r.Files).SingleOrDefault(r => r.ResourceID == id); 
+            //var PdfFile = db.Files.Where(p => p.ResourceId == id).Select(f => f.Content).FirstOrDefault(); //What is this?
 
-                return Json(resource);
+            thisResource.LikeCount = numberLikes;   //set like count of this resource to reflect new like  ???
+            db.SaveChanges();
+
+            return View(resource);
+        }
+
+        /*public string UnlikeThis(int id)
+        {
+            Article art = DB.Articles.FirstOrDefault(x => x.ID == id);
+            if (User.Identity.IsAuthenticated || Session["Username"] != null)
+            {
+                var username = User.Identity.Name;
+                Member m = DB.Members.FirstOrDefault(x => x.Username == username);
+                Like l = DB.Likes.FirstOrDefault(x => x.ArticleID == id && x.UserID == m.ID);
+                art.Likes--;
+                DB.Likes.Remove(l);
+                DB.SaveChanges();
 
             }
-        }
-              
+            return art.Likes.ToString();
+        }*/
+
 
         // GET: Resources/Create
         public ActionResult Create()

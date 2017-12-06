@@ -52,3 +52,14 @@ textarea {
     }
 	
 	@Html.ActionLink("View Comments", "Index", "~Views/Index/Comments", new { ResourceID = Model.ResourceID }, null) |
+	
+	
+	
+	<!--else if (@ViewBag.ThisResource.Likes.Any(x => x.UserID == userid && x.ArticleID == @ViewBag.ThisResource.ID) || Ajax.ViewBag.Liked == true)
+                {
+                    <a href="javascript:void(0)" class="unlike" data-id="@ViewBag.ThisRresource.ID"><i class="fa fa-heart fa-lg text-danger"></i><span>(@ViewBag.ThisResource.Likes)u</span></a>
+                }
+                else if
+                {
+                    <a href="javascript:void(0)" class="like" data-id="@ViewBag.ThisRresource.ID"><i class="fa fa-heart-o fa-lg"></i><span>(@ViewBag.ThisResource.Likes)l</span></a>
+                }-->

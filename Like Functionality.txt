@@ -1,0 +1,36 @@
+//if (a)
+            {
+
+                Like like = new Like
+                {
+                    UserId = User.Identity.GetUserId(),
+                    ResourceId = resource.ResourceID
+                    //public virtual Resource Resource { get; set; }
+                };
+
+            var userlike = db.Likes.Where(l => l.UserId == like.UserId && l.ResourceId == id);
+                if (userlike.Count() == 0)
+                {
+                    db.Likes.Add(like);
+                    db.SaveChanges();
+                }
+                else if (userlike.Count() == 1)
+                {
+                    var likeDel = db.Likes.FirstOrDefault(l => l.UserId == like.UserId && l.ResourceId == id);
+                    db.Likes.Remove(likeDel);
+                    db.SaveChanges();
+                }
+                //db.Entry(resource).State = EntityState.Modified;
+                //db.SaveChanges(); 
+
+            List<Like> resourceLikes = db.Likes.Where(r => r.ResourceId == id).ToList();    //set likeCount
+                int numberLikes = resourceLikes.Count();  //int numberLikes = # of likes (from above)
+
+                Resource thisResource = db.Resources.Include(r => r.Files).SingleOrDefault(r => r.ResourceID == id);
+                //var PdfFile = db.Files.Where(p => p.ResourceId == id).Select(f => f.Content).FirstOrDefault(); //What is this?
+
+                //thisResource.LikeCount = numberLikes;   //set like count of this resource to reflect new like  ???
+
+                return Json(resource);
+
+            }

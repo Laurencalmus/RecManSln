@@ -18,7 +18,7 @@ namespace RecMan.DAL
         public DbSet<Models.File> Files { get; set; }
         public DbSet<Models.FilePath> FilePaths { get; set; }
         public DbSet<Models.Comment> Comments { get; set; }
-        public DbSet<Models.Vote> Votes { get; set; }
+        public DbSet<Models.Like> Likes { get; set; }
 
     }
 }
