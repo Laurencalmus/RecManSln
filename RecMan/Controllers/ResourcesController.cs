@@ -104,19 +104,18 @@ namespace RecMan.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost, ActionName("Details")]
         [ValidateAntiForgeryToken]
-        public ActionResult Details([Bind(Include = "ResourceID,Title,Source,Level,Focus,Topic,Content,File,FilePath,ContentType")] int id, int UserId)
+        public ActionResult Details([Bind(Include = "ResourceID,Title,Source,Level,Focus,Topic,Content,File,FilePath,ContentType")] int id)
         {
             var resource = db.Resources.Find(id);
             ViewBag.ThisResource = resource;
 
-            if (User.Identity.IsAuthenticated || Session["Username"] != null)
+            if (User.Identity.IsAuthenticated/* || Session["Username"] != null*/)
             {
                 Like like = new Like();
-
-                var userlike = db.Likes.Where(l => l.UserId == like.UserId && l.ResourceId == id);
-
                 like.ResourceId = id;
                 like.UserId = User.Identity.GetUserId();
+
+                var userlike = db.Likes.Where(l => l.UserId == like.UserId && l.ResourceId == id);
 
                 if (userlike.Count() == 0)
                 {
@@ -130,8 +129,14 @@ namespace RecMan.Controllers
                     db.Likes.Remove(likeDel);
                     db.SaveChanges();
                 }
-                //db.Entry(resource).State = EntityState.Modified;
-                //db.SaveChanges(); 
+                else 
+                {
+                    db.Likes.Add(like);
+                    like.Liked = true;
+                    db.SaveChanges();
+                }
+                db.Entry(resource).State = EntityState.Modified;
+                db.SaveChanges(); 
             }
             List<Like> resourceLikes = db.Likes.Where(r => r.ResourceId == id).ToList();    //set likeCount  //all the likes for that resource(id)
             int numberLikes = resourceLikes.Count();  //int numberLikes = # of likes (from above)
@@ -173,13 +178,15 @@ namespace RecMan.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost, ActionName("Create")]
         [ValidateAntiForgeryToken]
-        public ActionResult Add([Bind(Include = "ResourceID,Title,Source,Level,Focus,Topic,Content,File,FileType,ContentType")] Resource resource, HttpPostedFileBase upload)
+        public ActionResult Add([Bind(Include = "ResourceID,Title,Source,Level,Focus,Topic,Content,File,FileType,ContentType,UserId")] Resource resource, HttpPostedFileBase upload)
         {
             {
                 try
                 {
                     if (ModelState.IsValid)
                     {
+                            resource.UserName = HttpContext.User.Identity.Name;
+                        }
                         if (upload != null && upload.ContentLength > 0)
                         {
                             var avatar = new Models.File
@@ -197,7 +204,6 @@ namespace RecMan.Controllers
                         db.Resources.Add(resource);
                         db.SaveChanges();
                         return RedirectToAction("Index");
-                    }
                 }
                 catch (RetryLimitExceededException /* dex */)
                 {

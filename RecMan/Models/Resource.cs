@@ -48,8 +48,19 @@ namespace RecMan.Models
     }
     public class Resource
     {
-        public int ResourceID
-        { get; set; }
+        //private string v;
+        private EflLevel level;
+
+        /*public Resource(string v, string source, string topic, string content)
+        {
+            this.v = v;
+            Source = source;
+            Topic = topic;
+            Content = content;
+        }*/
+
+        public int ResourceID { get; set; }
+        public String UserName { get; set; }
         public String Title { get; set; }
         public String Source { get; set; }
         public EflLevel Level { get; set; }

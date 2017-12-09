@@ -1,18 +1,17 @@
-﻿@{
-    ViewBag.Title = "Home Page";
-}
-
+﻿<html>
+<head>
+    <link href="~/Content/Site.css" rel="stylesheet" />
+</head>
 @model IEnumerable<RecMan.Models.Resource>
 
 @{
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h4>
+    @Html.ActionLink("Add new resource", "Create", "Resources", new { area = "" })
+</h4>
 
-<p>
-    @Html.ActionLink("+", "Create")
-</p>
 
 <table class="table">
     <tr>
@@ -70,3 +69,4 @@
     }
 
 </table>
+</html>

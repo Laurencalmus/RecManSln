@@ -1,1 +1,123 @@
-﻿
+﻿body {
+    /*margin-top: 0%;*/
+    padding: 0;
+    background-color:white; 
+}
+
+.container-nav{
+max-height:10%;
+padding-top: 2%;
+min-width: 100%;
+margin-top: 0%;
+position: fixed;
+}
+
+.nav {
+margin-top: -10%;
+padding-top: 0%;
+height: 15%;
+min-width: 100%;
+position: fixed;
+background-color:seagreen;
+
+}
+
+.nav ul {
+    list-style-type: none;
+    text-align: center;
+    overflow: hidden;
+    /*height: 10%;*/
+}
+
+.nav li a {
+    display: block;
+    text-align: center;
+    font-size: 110%;
+    color: white;
+}
+
+.nav li {
+    display: block;
+    height: 10%;
+    font-size: 90%;
+}
+
+.heading {                /*navbar left*/
+margin-right: 80%;
+margin-left: 0%;
+left: 0;
+width: 20%;
+position: fixed;
+font-size: 150%;
+}
+
+.plus {
+margin-left: 60%;
+margin-right: 30%;
+width: 5%;
+position: fixed;
+}
+
+.login {
+margin-right: 30%;
+margin-left: 35%;
+width: 20%;
+position: fixed;
+right: 0;
+}
+
+.search {
+margin-right: 0%;
+margin-left: 70%;
+width: 30%;
+position: fixed;
+right: 0;
+padding-top: 1%;
+}
+
+.container-body{
+margin-top:10%;
+margin-bottom:5%;
+margin-left:5%;
+margin-right:5%;
+}
+
+.button1 {
+  color: white;
+  font-size: 100%;
+  font-family: helvetica;
+  text-decoration: none;
+  border: 2px solid white;
+  border-radius: 2px;
+  transition-duration: .2s;
+  -webkit-transition-duration: .2s;
+  -moz-transition-duration: .2s;
+  background-color: seagreen;
+  padding: 4px 8px;
+}
+
+.button2 {
+color: white;
+  font-size: 100%;
+  font-family: helvetica;
+  text-decoration: none;
+  border: 2px solid white;
+  border-radius: 2px;
+  transition-duration: .2s;
+  -webkit-transition-duration: .2s;
+  -moz-transition-duration: .2s;
+  background-color: seagreen;
+  padding: 4px 8px;
+}
+
+.detailsTable {
+border: solid;
+border-color: blue;
+}
+
+.detailsTable li {
+    list-style-type: none;
+    text-align: center;
+    overflow: hidden;
+    float: left;
+}

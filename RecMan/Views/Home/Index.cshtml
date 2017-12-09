@@ -1,34 +1,49 @@
-﻿@{
+﻿@using Microsoft.AspNet.Identity
+
+@{
     ViewBag.Title = "Home Page";
 }
 
-<div class="jumbotron">
-    
-</div>
-
 <div class="row">
     <div class="col-md-4">
-        <h2>View All Resources</h2>
-        <p>Text Description</p>
-        <p><a class="btn btn-default" @Html.ActionLink("Go", "Index", "Resources") &raquo;</a></p>
-    </div>
+        @if (Request.IsAuthenticated)
+        {
+            using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "jumbotron" }))
+            {
+                @Html.AntiForgeryToken()
 
-    <div class="col-md-4">
-        <h2>Post a resource</h2>
-        <p>
-            Text description
-        </p>
-        <p><a class="btn btn-default" @Html.ActionLink("Go", "Create", "Resources") &raquo;</a></p>
-    </div>
+                <ul>
+                    <li>
+                        @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
+                    </li>
+                    <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+                </ul>
+            }
+        }
+        else
+        {
+            <ul >
+                <li>@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+                <li>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+            </ul>
+        }
+        </div>
 
-    <!--<div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" @Html.ActionLink("Instructor", "Create", "Resources") &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-    </div>-->
-</div>
+
+        <!--<div class="row">
+            <div class="col-md-4">
+                <h2>View All Resources</h2>
+                <p>Text Description</p>
+                <p><a class="btn btn-default" @Html.ActionLink("Go", "Index", "Resources") &raquo;</a></p>
+            </div>
+
+            <div class="col-md-4">
+                <h2>Post a resource</h2>
+                <p>
+                    Text description
+                </p>
+                <p><a class="btn btn-default" @Html.ActionLink("Go", "Create", "Resources") &raquo;</a></p>
+            </div>-->
+
+ 
+
