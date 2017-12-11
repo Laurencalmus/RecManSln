@@ -91,6 +91,7 @@ namespace RecMan.Controllers
             if (User.Identity.GetUserId()== db.Model.Comment.ID )
                 { userTest = true}*/
             ViewBag.Userr = User.Identity.GetUserId();
+            ViewBag.UserrName = HttpContext.User.Identity.Name;
 
             if (id == null)
             {
@@ -116,25 +117,29 @@ namespace RecMan.Controllers
         // POST: Resources/Details             //for like counter
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost, ActionName("Details")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Details([Bind(Include = "ResourceID,Title,Source,Level,Focus,Topic,Content,File,FilePath,ContentType")] int id)
+        public ActionResult Details(int id)
         {
             var resource = db.Resources.Find(id);
-            ViewBag.Userr = User.Identity.GetUserId();
+            //ViewBag.Userr = User.Identity.GetUserId();
 
-            if (User.Identity.IsAuthenticated/* || Session["Username"] != null*/)
-            {
-                Like like = new Like();
+            //if (ModelState.IsValid)
+            //{
+            Like like = new Like();
                 like.ResourceId = id;
                 like.UserId = User.Identity.GetUserId();
+                like.Liked = true;
+            db.Likes.Add(like);
+            db.SaveChanges();
+            string message = "SUCCESS";
+            return Json(new { Message = message, JsonRequestBehavior.AllowGet });
 
-                var userlike = db.Likes.Where(l => l.UserId == like.UserId && l.ResourceId == id);
+            /*var userlike = db.Likes.Where(l => l.UserId == like.UserId && l.ResourceId == id);
 
                 if (userlike.Count() == 0)
                 {
                     db.Likes.Add(like);
-                    like.Liked = true;
                     db.SaveChanges();
                 }
                 else if (userlike.Count() == 1)
@@ -149,9 +154,9 @@ namespace RecMan.Controllers
                     like.Liked = true;
                     db.SaveChanges();
                 }
-                db.Entry(resource).State = EntityState.Modified;
-                db.SaveChanges(); 
-            }
+                //db.Entry(resource).State = EntityState.Modified;
+                //db.SaveChanges(); 
+            //}
             List<Like> resourceLikes = db.Likes.Where(r => r.ResourceId == id).ToList();    //set likeCount  //all the likes for that resource(id)
             int numberLikes = resourceLikes.Count();  //int numberLikes = # of likes (from above)
 
@@ -161,7 +166,7 @@ namespace RecMan.Controllers
             thisResource.LikeCount = numberLikes;   //set like count of this resource to reflect new like  ???
             db.SaveChanges();
 
-            return View(resource);
+            return View(resource);*/
         }
 
         /*public string UnlikeThis(int id)

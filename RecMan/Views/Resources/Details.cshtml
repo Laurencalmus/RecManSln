@@ -8,82 +8,56 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="~/Content/Site.css" rel="stylesheet" />
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script>
-    $(document).ready(function () {
-        //LIKE
-        $("a.Like").on("click", function () {
-            var link = "/Resource/Details/" + id;
-            //Choose all a tags with this class and this ID
-            //var a = $("a[class$='like'][data-id$='"+id+"']");
-            $.ajax({
-                type: "GET",
-                cache: false,
-                //url: '<%: Url.Resources("Details")%>',
-                url: link = "/Resource/Details/" + id,
-                data: {"id":id},
-                success: function (result) {
-                    a.html('<i class="fa fa-heart fa-lg text-danger"></i> <span>(' + result + ')</span>').addClass("like");
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    $('#lblCommentsNotification').text("Error encountered while liking.");
-                }
-            });
-        });
-
-        /*$('#btnSaveComments').click(function () {
-            var comments = $('#txtComments').val();
-            var selectedId = $('#hdnSelectedId').val();
-
-            $.ajax({
-                url: '<%: Url.Action("SaveComments")%>',
-                data: { 'id' : selectedId, 'comments' : comments },
-                type: "post",
-                cache: false,
-                success: function (savingStatus) {
-                    $("#hdnOrigComments").val($('#txtComments').val());
-                    $('#lblCommentsNotification').text(savingStatus);
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    $('#lblCommentsNotification').text("Error encountered while saving the comments.");
-                }
-            });
-        });*/
-
-        /*$.ajax({
-            url:/Resources/Details,
-            data: "id=" + Id + "&param2=" + param2,
-        type: "GET",
-        success: function(data){
-            // code here
-        },
-        error: function(passParams){
-            // code here
-        }
-    });*/
-        /*//UNLIKE
-        $("a.unlike").click(function () {
-            var id = $(this).data("id");
-            var link = "/Resource/UnlikeThis/" + id;
-            var a = $(this);
-            $.ajax({
-                type: "GET",
-                url: link,
-                success: function (result) {
-                    a.html('<i class="fa fa-heart fa-lg text-danger"></i> (' + result + ')');
-                }
-            });
-        });*/
-
-    });
-</script></head>
+   
+   
+</head>
 
 
 <body>
         <div class="table-title">
             <h2>@Html.DisplayFor(model => model.Title)</h2>
             <h4>by @Html.DisplayFor(model => model.UserName)</h4>
-             <a class="Like">@Html.ActionLink("Like", "Details", new { id = Model.ResourceID })</a>
+
+            <input id="idLabel" value="@Model.ResourceID" >
+            <button id="Like">Like</button>
+            <a>@Html.ActionLink("Like", "Details", new { id = Model.ResourceID }) </a>
+            
+            
+            <script>
+            // You're probably clicking something to initiate update
+            var $Like = $('#Like');
+
+            // .live persists on the page even after other ajax calls
+            // So when the thing is clicked
+            $Like.live('click', function() {
+
+               // Grab the information needed to update
+               var id = $('#idLabel').val(); //Or it could be .text()
+
+               // Let's edit the description!
+               $.ajax({
+                 type: "POST",
+                 url: "Resources/Details", // the method we are calling
+                 contentType: "application/json; charset=utf-8",
+                 data: { 'id': id },
+                 dataType: "json",
+                 success: function (result) {
+                     alert('Yay! It worked!');
+                     // Or if you are returning something
+                     //alert('I returned... ' + result.WhateverIsReturning);
+                 },
+                 error: function (result) {
+                     alert('Oh no :(');
+                 }
+               });
+            });
+            </script>
+
+
+                @if (@ViewBag.UserrName == "Lauren")
+                {
+                @Html.ActionLink("Edit this resource", "Edit", new { id = Model.ResourceID })
+                }
         </div>
     <div class="ResourceHeader">
         <table class="table">
@@ -137,7 +111,7 @@
         <table class="table">
             <tr>
                 <h3>Comments</h3>
-                @Html.ActionLink("Post a Comment", "../Comments/Create", new { id = Model.ResourceID }) |
+                @Html.ActionLink("Post a Comment", "../Comments/Create", new { id = Model.ResourceID })
             </tr>
             @foreach (var c in Model.Comments.OrderByDescending(c => c.DateTime))
             {
@@ -154,17 +128,12 @@
                         { @Html.ActionLink("Edit", "../Comments/Edit", new { id = c.ID, ResId = Model.ResourceID })}
                     </td>
                     <td>
-                        @if (@c.UserId == @ViewBag.userr) 
+                        @if (@c.UserId == @ViewBag.userr)
                         { @Html.ActionLink("Delete", "../Comments/Delete", new { id = c.ID, ResId = Model.ResourceID })}
                     </td>
                 </tr>
             }
         </table>
-
-        @if(Model.UserName == "Lauren")
-            { 
-            @Html.ActionLink("Edit this resource", "Edit", new { id = Model.ResourceID })
-            }
 
         @section Scripts {
             @Scripts.Render("~/bundles/jqueryval")

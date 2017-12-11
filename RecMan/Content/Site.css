@@ -135,12 +135,6 @@ float:left;
 width: 50%;
 }
 
-.LoginBody {
-background-image: url(/Images/Grafton.jpeg);
-
-
-}
-
 .ResourceHeader {
     background-color: lightgrey;
 }
@@ -155,5 +149,13 @@ width: 50%;
 
 a.Like {
 float: right;
+}
+
+.LoginBody {
+    background-color: white;
+  opacity: 0.8;
+    filter: alpha(opacity=90); /* For IE8 and earlier */ 
+    margin-right: 50%;    
+    padding: 1%;
 }
 
