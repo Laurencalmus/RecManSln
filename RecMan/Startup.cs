@@ -68,7 +68,7 @@ namespace RecMan
             if (!roleManager.RoleExists("Teacher"))
             {
                 var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();
-                role.Name = "Employee";
+                role.Name = "Teacher";
                 roleManager.Create(role);
 
             }

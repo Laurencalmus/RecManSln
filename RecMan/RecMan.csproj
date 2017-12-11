@@ -204,6 +204,8 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AppUser.cs" />
     <Compile Include="Models\Comment.cs" />
+    <Compile Include="Models\CommentEditViewModel.cs" />
+    <Compile Include="Models\CommentCreateViewModel.cs" />
     <Compile Include="Models\File.cs" />
     <Compile Include="Models\FilePath.cs" />
     <Compile Include="Models\FileType.cs" />
@@ -233,8 +235,13 @@
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Images\Grafton.jpeg" />
+    <Content Include="Images\GraftonBW.jpeg" />
+    <Content Include="Images\GraftonRed.jpeg" />
     <Content Include="Images\home.png" />
     <Content Include="Images\home.svg" />
+    <Content Include="Images\menu.gif" />
+    <Content Include="Images\Reflection.jpg" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
@@ -264,7 +271,6 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
     <Content Include="Views\Account\ConfirmEmail.cshtml" />
     <Content Include="Views\Account\ExternalLoginConfirmation.cshtml" />

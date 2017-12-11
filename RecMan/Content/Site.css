@@ -59,16 +59,16 @@ position: fixed;
 }
 
 .login {
-margin-right: 30%;
-margin-left: 35%;
+margin-right: 0%;
+margin-left: 80%;
 width: 20%;
 position: fixed;
 right: 0;
 }
 
 .search {
-margin-right: 0%;
-margin-left: 70%;
+margin-right: 35%;
+margin-left: 30%;
 width: 30%;
 position: fixed;
 right: 0;
@@ -121,3 +121,39 @@ border-color: blue;
     overflow: hidden;
     float: left;
 }
+
+.content {
+border-top: solid;
+border-bottom: solid;
+border-left: solid;
+border-right: solid;
+min-height: 60%;
+}
+
+.title-table {
+float:left;
+width: 50%;
+}
+
+.LoginBody {
+background-image: url(/Images/Grafton.jpeg);
+
+
+}
+
+.ResourceHeader {
+    background-color: lightgrey;
+}
+
+.title-table {
+width: 50%;
+}
+
+.blue{
+    font: #5391C8;
+}
+
+a.Like {
+float: right;
+}
+

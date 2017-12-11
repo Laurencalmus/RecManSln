@@ -2,16 +2,17 @@
 
 @{
     ViewBag.Title = "Details";
-    ViewBag.ThisResource = "thisResource";
 }
 
 <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="~/Content/Site.css" rel="stylesheet" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script>
     $(document).ready(function () {
         //LIKE
-       $("a.Like").on("click", function () {
+        $("a.Like").on("click", function () {
             var link = "/Resource/Details/" + id;
             //Choose all a tags with this class and this ID
             //var a = $("a[class$='like'][data-id$='"+id+"']");
@@ -71,94 +72,104 @@
                 success: function (result) {
                     a.html('<i class="fa fa-heart fa-lg text-danger"></i> (' + result + ')');
                 }
-            });*/
-        });
+            });
+        });*/
 
     });
 </script></head>
 
 
 <body>
-    <h2>
-        <dd>
-        @Html.DisplayFor(model => model.Title)
-        </dd>
-    </h2>
+        <div class="table-title">
+            <h2>@Html.DisplayFor(model => model.Title)</h2>
+            <h4>by @Html.DisplayFor(model => model.UserName)</h4>
+             <a class="Like">@Html.ActionLink("Like", "Details", new { id = Model.ResourceID })</a>
+        </div>
+    <div class="ResourceHeader">
+        <table class="table">
+            <tr class="blue">
+                <th>@Html.DisplayNameFor(model => model.Source)</th>
+                <th>@Html.DisplayNameFor(model => model.Level)</th>
+                <th>@Html.DisplayNameFor(model => model.Focus)</th>
+                <th>@Html.DisplayNameFor(model => model.Topic)</th>
+                <th>@Html.DisplayNameFor(model => model.LikeCount)</th>
+            </tr>
 
-    <div>
-        <h4>by @Html.DisplayFor(model => model.UserName)</h4>
-        <hr />
-        
-            <table class="table table-bordered table-responsive table-hover">
-                <tr>
-                    <th>@Html.DisplayNameFor(model => model.Source)</th>
-                    <th>@Html.DisplayNameFor(model => model.Level)</th>
-                    <th>@Html.DisplayNameFor(model => model.Focus)</th>
-                    <th>@Html.DisplayNameFor(model => model.Topic)</th>
-                    <th>@Html.DisplayNameFor(model => model.LikeCount)</th>
-                </tr>
- 
-                <tr>
-                        <td>@Html.DisplayFor(model => model.Source)</td>
-                        <td>@Html.DisplayFor(model => model.Level)</td>
-                        <td>@Html.DisplayFor(model => model.Focus)</td>
-                        <td>@Html.DisplayFor(model => model.Topic)</td>
-                        <td>@Html.DisplayFor(model => model.LikeCount)</td>
-                </tr>
-               
+            <tr>
+                <td>@Html.DisplayFor(model => model.Source)</td>
+                <td>@Html.DisplayFor(model => model.Level)</td>
+                <td>@Html.DisplayFor(model => model.Focus)</td>
+                <td>@Html.DisplayFor(model => model.Topic)</td>
+                <td>@Html.DisplayFor(model => model.LikeCount)</td>
+            </tr>
+        </table>
+    </div><!--ResourceHeader-->
 
-                    @if (Model.Files.Any(f => f.ContentType == "image/jpeg"))
+    <div class="content">
+        <table class="table">
+            <tr>
+                <td>@Html.DisplayFor(model => model.Content)</td>
+            </tr>
+
+            @if (Model.Files.Any(f => f.ContentType == "image/jpeg"))
             {
-                        <dt>
-                            Avatar
-                        </dt>
-                        <dd>
-                            <img src="~/File?id=@Model.Files.First(f => f.FileType == FileType.Avatar).FileId" alt="avatar" />
-                        </dd>
+                <dt>
+                    Avatar
+                </dt>
+                <dd>
+                    <img src="~/File?id=@Model.Files.First(f => f.FileType == FileType.Avatar).FileId" alt="avatar" />
+                </dd>
 
-                    }
+            }
 
-                    @if (Model.Files.Any(f => f.ContentType == "application/pdf"))
+            @if (Model.Files.Any(f => f.ContentType == "application/pdf"))
             {
                 var getData = ViewData["PDF"];
 
-                        <object data="data:application/pdf;base64,@System.Convert.ToBase64String((Byte[])ViewData["PDF"])" type="application/pdf" width="500">
-                            <embed src="data:application/pdf;base64, @System.Convert.ToBase64String((Byte[])ViewData["PDF"])" type="application/pdf" />
-                        </object>
-                    }
+                <object data="data:application/pdf;base64,@System.Convert.ToBase64String((Byte[])ViewData["PDF"])" type="application/pdf" width="500">
+                    <embed src="data:application/pdf;base64, @System.Convert.ToBase64String((Byte[])ViewData["PDF"])" type="application/pdf" />
+                </object>
+            }
+        </table>
+        </div>
 
 
-
-
-
-                    <dt>
-                        @Html.DisplayNameFor(model => model.Comments)
-                    </dt>
-
-                    @foreach (var item in Model.Comments)
+        <table class="table">
+            <tr>
+                <h3>Comments</h3>
+                @Html.ActionLink("Post a Comment", "../Comments/Create", new { id = Model.ResourceID }) |
+            </tr>
+            @foreach (var c in Model.Comments.OrderByDescending(c => c.DateTime))
             {
-                        <div>@item.UserName</div>
-                        <div>@item.Message</div>
-                        <p>posted</p>
-                        <div>@item.DateTime</div>
-                        <p>edited</p>
-                        <div>@item.DateTimeEdit</div>
-               
-                        
-                        
-                        @Html.ActionLink("Edit", "../Comments/Edit", new { id = item.ID, ResId = Model.ResourceID });
-                        @Html.ActionLink("Delete", "../Comments/Delete", new { id = item.ID, ResId = Model.ResourceID })
-                        
-                    }
+                <tr>
+                    <td>@c.UserName</td>
+                    <td>@c.Message</td>
+                    <td>
+                        @if (@c.DateTimeEdit != null)
+                        {<p>edited</p>@c.DateTimeEdit}
+                        <p>posted</p>@c.DateTime
+                    </td>
+                    <td>
+                        @if (@c.UserId == @ViewBag.Userr)
+                        { @Html.ActionLink("Edit", "../Comments/Edit", new { id = c.ID, ResId = Model.ResourceID })}
+                    </td>
+                    <td>
+                        @if (@c.UserId == @ViewBag.userr) 
+                        { @Html.ActionLink("Delete", "../Comments/Delete", new { id = c.ID, ResId = Model.ResourceID })}
+                    </td>
+                </tr>
+            }
+        </table>
 
+        @if(Model.UserName == "Lauren")
+            { 
+            @Html.ActionLink("Edit this resource", "Edit", new { id = Model.ResourceID })
+            }
 
-                    @Html.ActionLink("Post a Comment", "../Comments/Create", new { id = Model.ResourceID }) |
-                    @Html.ActionLink("Edit", "Edit", new { id = Model.ResourceID })
-                    @Html.ActionLink("Like", "Details", new { id = item.ID })
-
-
-                    @section Scripts {
-                        @Scripts.Render("~/bundles/jqueryval")
-                    }
+        @section Scripts {
+            @Scripts.Render("~/bundles/jqueryval")
+        }
 </body>
+
+
 

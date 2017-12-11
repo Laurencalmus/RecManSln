@@ -164,7 +164,7 @@ namespace RecMan.Controllers
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                    //await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771    
                     // Send an email with this link    
@@ -174,7 +174,7 @@ namespace RecMan.Controllers
                     //Assign Role to user Here       
                     await this.UserManager.AddToRoleAsync(user.Id, model.UserRoles);
                     //Ends Here     
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Resources");
                 }
                 ViewBag.Name = new SelectList(context.Roles.Where(u => !u.Name.Contains("Admin"))
                                           .ToList(), "Name", "Name");
@@ -406,7 +406,7 @@ namespace RecMan.Controllers
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Login", "Account");
         }
 
         //
@@ -473,7 +473,7 @@ namespace RecMan.Controllers
             {
                 return Redirect(returnUrl);
             }
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Resources");
         }
 
         internal class ChallengeResult : HttpUnauthorizedResult

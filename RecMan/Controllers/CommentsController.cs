@@ -52,7 +52,6 @@ namespace RecMan.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "ID,Message,UserId,UserName,DateTime,DateTimeEdit,ResourceID")] int id, Comment comment)
         {
-
             if (ModelState.IsValid)
             {
                 comment.UserId = User.Identity.GetUserId();
@@ -89,24 +88,40 @@ namespace RecMan.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Message,UserId,UserName,DateTime,ResourceId")] int ResId, int id, Comment comment)
+        [Authorize]
+        public ActionResult Edit(CommentEditViewModel vm, int ResId, int id)
         {
+            var comment = db.Comments.Find(vm.ID);
+            var CreatedDate = comment.DateTime;
+
             if (ModelState.IsValid)
             {
+                comment.Message = vm.Message;
+                comment.UserId = User.Identity.GetUserId();
+                comment.UserName = HttpContext.User.Identity.Name;
                 comment.DateTimeEdit = System.DateTime.Now;
+                comment.DateTime = CreatedDate;
+                comment.ResourceID = ResId;
+                db.SaveChanges();
+                return RedirectToAction("Details", "Resources", new { id = ResId });
+            }
+            return View();
+        }
+
+                /*comment.DateTimeEdit = System.DateTime.Now;
                 comment.ID = id;
                 comment.ResourceID = ResId;
                 comment.DateTime = comment.DateTime;
                 comment.UserId = User.Identity.GetUserId();
                 comment.UserName = HttpContext.User.Identity.Name;
-                //db.Entry(comment).Property(c => c.DateTime).IsModified = false;*/
+                //db.Entry(comment).Property(c => c.DateTime).IsModified = false;  //doesn't work
                 db.Entry(comment).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Details", "Resources", new { id = id });
+                return RedirectToAction("Details", "Resources", new { id = ResId });
             }
             //ViewBag.ResourceId = new SelectList(db.Resources, "ResourceID", "Title", comment.ResourceID);
             return View(comment);
-        }
+        }*/
 
         // GET: Comments/Delete/5
         public ActionResult Delete(int? id)
@@ -127,12 +142,12 @@ namespace RecMan.Controllers
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
 
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed(int id, int ResId)
         {
             Comment comment = db.Comments.Find(id);
             db.Comments.Remove(comment);
             db.SaveChanges();
-            return RedirectToAction("Details", "Resources", new { id = id });
+            return RedirectToAction("Details", "Resources", new { id = ResId });
         }
 
         protected override void Dispose(bool disposing)

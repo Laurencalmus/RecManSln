@@ -102,13 +102,13 @@
 }
 
 
-
 <div>
-    @Html.ActionLink("<-", "Index")
+    @Html.ActionLink("Delete This Resource", "Delete", new { id = Model.ResourceID })
 </div>
 
+
 <div>
-    @Html.ActionLink("Delete", "Delete", new { id = Model.ResourceID }) 
+    @Html.ActionLink("Back to list", "Index")
 </div>
 
 @section Scripts {

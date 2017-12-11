@@ -19,6 +19,7 @@ namespace RecMan.Controllers
         private RecManContext db = new RecManContext();
 
         // GET: Resources
+        //[Authorize]
         public ViewResult Index(string sortOrder, string searchString)
         {
             ViewBag.SourceSortParm = String.IsNullOrEmpty(sortOrder) ? "source_desc" : "";
@@ -71,13 +72,26 @@ namespace RecMan.Controllers
                     break;
             }
 
-            return View(resources.ToList());
+            //if (User.Identity.IsAuthenticated)   //or Request.IsAuthenticated     If I do that on an Action decorated with [Authorize] it works fine, 
+            //{
+                return View(resources.ToList());       //however if I do that on this Action (not decorated with [Authorize]) it is always false, 
+            /*}
+            //regardless of whether I am logged in or not. 
+            else
+            {
+                RedirectToAction("Login", "Account");
+            }*/
         }
 
 
         // GET: Resources/Details/5
         public ActionResult Details(int? id)
         {
+            /*Boolean userTest = ViewBag.Userr;
+            if (User.Identity.GetUserId()== db.Model.Comment.ID )
+                { userTest = true}*/
+            ViewBag.Userr = User.Identity.GetUserId();
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -107,7 +121,7 @@ namespace RecMan.Controllers
         public ActionResult Details([Bind(Include = "ResourceID,Title,Source,Level,Focus,Topic,Content,File,FilePath,ContentType")] int id)
         {
             var resource = db.Resources.Find(id);
-            ViewBag.ThisResource = resource;
+            ViewBag.Userr = User.Identity.GetUserId();
 
             if (User.Identity.IsAuthenticated/* || Session["Username"] != null*/)
             {

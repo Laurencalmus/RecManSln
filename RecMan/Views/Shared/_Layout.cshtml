@@ -9,7 +9,9 @@
     <link href="~/Content/Site.css" rel="stylesheet" />
 </head>
 <body>
-    
+   
+    @if (ViewBag.HideNavBar == null)
+    {
     <div class="nav">
         <ul class="container-nav">
             <li class="heading">
@@ -39,6 +41,7 @@
 
             </ul> <!--containter nav?-->
         </div>
+        }
 
 
 
