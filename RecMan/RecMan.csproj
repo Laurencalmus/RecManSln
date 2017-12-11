@@ -201,6 +201,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AppUser.cs" />
     <Compile Include="Models\Comment.cs" />
@@ -235,7 +236,9 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
+    <None Include="Properties\PublishProfiles\easypreplibrary - FTP %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\easypreplibrary - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\easypreplibrary - Web Deploy %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\easypreplibrary - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Images\Grafton.jpeg" />
