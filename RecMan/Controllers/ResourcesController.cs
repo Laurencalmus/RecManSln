@@ -22,7 +22,8 @@ namespace RecMan.Controllers
         //[Authorize]
         public ViewResult Index(string sortOrder, string searchString)
         {
-            ViewBag.SourceSortParm = String.IsNullOrEmpty(sortOrder) ? "source_desc" : "";
+            ViewBag.SourceSortParm = String.IsNullOrEmpty(sortOrder) ? "level_desc" : "Level";
+            ViewBag.TitleSortParm = sortOrder == "Source" ? "source_desc" : "Source";
             ViewBag.TitleSortParm = sortOrder == "Title" ? "title_desc" : "Title";
             ViewBag.TopicSortParm = sortOrder == "Topic" ? "topic_desc" : "Topic";
             ViewBag.LevelSortParm = sortOrder == "Level" ? "level_desc" : "Level";
@@ -52,6 +53,9 @@ namespace RecMan.Controllers
                 case "focus_desc":
                     resources = resources.OrderByDescending(r => r.Focus);
                     break;
+                case "Source":
+                    resources = resources.OrderBy(r => r.Source);
+                    break;
                 case "source_desc":
                     resources = resources.OrderByDescending(r => r.Source);
                     break;
@@ -71,25 +75,13 @@ namespace RecMan.Controllers
                     resources = resources.OrderBy(r => r.Level);
                     break;
             }
-
-            //if (User.Identity.IsAuthenticated)   //or Request.IsAuthenticated     If I do that on an Action decorated with [Authorize] it works fine, 
-            //{
-                return View(resources.ToList());       //however if I do that on this Action (not decorated with [Authorize]) it is always false, 
-            /*}
-            //regardless of whether I am logged in or not. 
-            else
-            {
-                RedirectToAction("Login", "Account");
-            }*/
+                return View(resources.ToList());       
         }
 
 
         // GET: Resources/Details/5
         public ActionResult Details(int? id)
         {
-            /*Boolean userTest = ViewBag.Userr;
-            if (User.Identity.GetUserId()== db.Model.Comment.ID )
-                { userTest = true}*/
             ViewBag.Userr = User.Identity.GetUserId();
             ViewBag.UserrName = HttpContext.User.Identity.Name;
 
@@ -97,7 +89,6 @@ namespace RecMan.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            /*Resource resource = db.Resources.Find(id);*/
             Resource resource = db.Resources.Include(r => r.Files).SingleOrDefault(r => r.ResourceID == id);
             var PdfFile = db.Files.Where(p => p.ResourceId == id).Select(f => f.Content).FirstOrDefault();
 
@@ -111,10 +102,10 @@ namespace RecMan.Controllers
             }
 
             return View(resource);
-            //return RedirectToAction("Create", "Comments");
+
         }
 
-        // POST: Resources/Details             //for like counter
+/*       // POST: Resources/Details             //for like counter           ----------------------------------------attemped like feature-----
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -122,20 +113,13 @@ namespace RecMan.Controllers
         public ActionResult Details(int id)
         {
             var resource = db.Resources.Find(id);
-            //ViewBag.Userr = User.Identity.GetUserId();
 
-            //if (ModelState.IsValid)
-            //{
             Like like = new Like();
                 like.ResourceId = id;
                 like.UserId = User.Identity.GetUserId();
                 like.Liked = true;
-            db.Likes.Add(like);
-            db.SaveChanges();
-            string message = "SUCCESS";
-            return Json(new { Message = message, JsonRequestBehavior.AllowGet });
 
-            /*var userlike = db.Likes.Where(l => l.UserId == like.UserId && l.ResourceId == id);
+            var userlike = db.Likes.Where(l => l.UserId == like.UserId && l.ResourceId == id);
 
                 if (userlike.Count() == 0)
                 {
@@ -154,38 +138,23 @@ namespace RecMan.Controllers
                     like.Liked = true;
                     db.SaveChanges();
                 }
-                //db.Entry(resource).State = EntityState.Modified;
-                //db.SaveChanges(); 
-            //}
+            string message = "SUCCESS";
+            return Json(new { Message = message, JsonRequestBehavior.AllowGet });
+            }
+ 
             List<Like> resourceLikes = db.Likes.Where(r => r.ResourceId == id).ToList();    //set likeCount  //all the likes for that resource(id)
             int numberLikes = resourceLikes.Count();  //int numberLikes = # of likes (from above)
 
             Resource thisResource = db.Resources.Include(r => r.Files).SingleOrDefault(r => r.ResourceID == id); 
-            //var PdfFile = db.Files.Where(p => p.ResourceId == id).Select(f => f.Content).FirstOrDefault(); //What is this?
+            //var PdfFile = db.Files.Where(p => p.ResourceId == id).Select(f => f.Content).FirstOrDefault(); 
 
             thisResource.LikeCount = numberLikes;   //set like count of this resource to reflect new like  ???
             db.SaveChanges();
 
-            return View(resource);*/
+            return View(resource);
         }
-
-        /*public string UnlikeThis(int id)
-        {
-            Article art = DB.Articles.FirstOrDefault(x => x.ID == id);
-            if (User.Identity.IsAuthenticated || Session["Username"] != null)
-            {
-                var username = User.Identity.Name;
-                Member m = DB.Members.FirstOrDefault(x => x.Username == username);
-                Like l = DB.Likes.FirstOrDefault(x => x.ArticleID == id && x.UserID == m.ID);
-                art.Likes--;
-                DB.Likes.Remove(l);
-                DB.SaveChanges();
-
-            }
-            return art.Likes.ToString();
-        }*/
-
-
+*/
+                
         // GET: Resources/Create
         public ActionResult Create()
         {
@@ -200,7 +169,7 @@ namespace RecMan.Controllers
         public ActionResult Add([Bind(Include = "ResourceID,Title,Source,Level,Focus,Topic,Content,File,FileType,ContentType,UserId")] Resource resource, HttpPostedFileBase upload)
         {
             {
-                try
+               try
                 {
                     if (ModelState.IsValid)
                     {
@@ -235,7 +204,7 @@ namespace RecMan.Controllers
 
 
         // GET: Resources/Edit/5
-        [Authorize(Roles = "Manager, Admin")]
+        [Authorize(Roles = "Admin")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -302,7 +271,7 @@ namespace RecMan.Controllers
         }
 
         // GET: Resources/Delete/5
-        [Authorize(Roles = "Manager, Admin")]
+        [Authorize(Roles = "Admin")]
         public ActionResult Delete(int? id)
         {
             if (id == null)

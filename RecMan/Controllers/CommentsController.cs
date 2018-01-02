@@ -108,20 +108,6 @@ namespace RecMan.Controllers
             return View();
         }
 
-                /*comment.DateTimeEdit = System.DateTime.Now;
-                comment.ID = id;
-                comment.ResourceID = ResId;
-                comment.DateTime = comment.DateTime;
-                comment.UserId = User.Identity.GetUserId();
-                comment.UserName = HttpContext.User.Identity.Name;
-                //db.Entry(comment).Property(c => c.DateTime).IsModified = false;  //doesn't work
-                db.Entry(comment).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Details", "Resources", new { id = ResId });
-            }
-            //ViewBag.ResourceId = new SelectList(db.Resources, "ResourceID", "Title", comment.ResourceID);
-            return View(comment);
-        }*/
 
         // GET: Comments/Delete/5
         public ActionResult Delete(int? id)

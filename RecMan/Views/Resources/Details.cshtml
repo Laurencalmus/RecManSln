@@ -14,14 +14,25 @@
 
 
 <body>
-        <div class="table-title">
-            <h2>@Html.DisplayFor(model => model.Title)</h2>
-            <h4>by @Html.DisplayFor(model => model.UserName)</h4>
-
-            <input id="idLabel" value="@Model.ResourceID" >
-            <button id="Like">Like</button>
-            <a>@Html.ActionLink("Like", "Details", new { id = Model.ResourceID }) </a>
-            
+        <table class="table-title">
+            <tr>
+                <td>
+                    <h1>@Html.DisplayFor(model => model.Title)</h1>
+                    <p>by @Html.DisplayFor(model => model.UserName)</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @if (@ViewBag.UserrName == "Lauren")
+                    {
+                        @Html.ActionLink("Edit this resource", "Edit", new { id = Model.ResourceID })
+                    }
+                </td>
+                    </tr>
+                <!--<input id="idLabel" value="@Model.ResourceID" >
+        <button id="Like">Like</button>
+        <a>@Html.ActionLink("Like", "Details", new { id = Model.ResourceID }) </a>-->
+            </tr>
             
             <script>
             // You're probably clicking something to initiate update
@@ -53,12 +64,7 @@
             });
             </script>
 
-
-                @if (@ViewBag.UserrName == "Lauren")
-                {
-                @Html.ActionLink("Edit this resource", "Edit", new { id = Model.ResourceID })
-                }
-        </div>
+        </table>
     <div class="ResourceHeader">
         <table class="table">
             <tr class="blue">
@@ -74,7 +80,7 @@
                 <td>@Html.DisplayFor(model => model.Level)</td>
                 <td>@Html.DisplayFor(model => model.Focus)</td>
                 <td>@Html.DisplayFor(model => model.Topic)</td>
-                <td>@Html.DisplayFor(model => model.LikeCount)</td>
+                <!--<td>@Html.DisplayFor(model => model.LikeCount)</td>-->
             </tr>
         </table>
     </div><!--ResourceHeader-->
@@ -82,7 +88,7 @@
     <div class="content">
         <table class="table">
             <tr>
-                <td>@Html.DisplayFor(model => model.Content)</td>
+                <td id="main">@Html.DisplayFor(model => model.Content)</td>
             </tr>
 
             @if (Model.Files.Any(f => f.ContentType == "image/jpeg"))

@@ -237,8 +237,10 @@
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
     <None Include="Properties\PublishProfiles\easypreplibrary - FTP %282%29.pubxml" />
+    <None Include="Properties\PublishProfiles\EasyPrepLibrary - FTP %283%29.pubxml" />
     <None Include="Properties\PublishProfiles\easypreplibrary - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\easypreplibrary - Web Deploy %282%29.pubxml" />
+    <None Include="Properties\PublishProfiles\EasyPrepLibrary - Web Deploy %283%29.pubxml" />
     <None Include="Properties\PublishProfiles\easypreplibrary - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Images\Grafton.jpeg" />
@@ -248,6 +250,7 @@
     <Content Include="Images\home.svg" />
     <Content Include="Images\menu.gif" />
     <Content Include="Images\Reflection.jpg" />
+    <Content Include="Images\sunset2.jpg" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
